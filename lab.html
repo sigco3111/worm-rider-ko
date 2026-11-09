@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Worm Rider — asset lab</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;font:12px/1.2 Bahnschrift,"Segoe UI",system-ui,sans-serif;color:#e9e2d8}
+  #stage{position:fixed;inset:0;display:grid;place-items:center}
+  canvas{display:block}
+  #ui{position:fixed;left:16px;top:14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:calc(100% - 32px)}
+  #ui button{all:unset;cursor:pointer;padding:7px 12px;border:1px solid rgba(233,226,216,.28);letter-spacing:.14em;text-transform:uppercase;font-size:11px;background:rgba(10,10,10,.35);backdrop-filter:blur(6px)}
+  #ui button[aria-pressed=true]{background:#e9e2d8;color:#111}
+  #ui button:focus-visible{outline:2px solid #ffb35c;outline-offset:2px}
+  #ui .sep{width:1px;height:18px;background:rgba(233,226,216,.25);margin:0 6px}
+  #tag{position:fixed;right:16px;bottom:12px;letter-spacing:.18em;text-transform:uppercase;font-size:10px;opacity:.6;pointer-events:none;text-align:right}
+</style>
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+<div id="stage"></div>
+<div id="ui"></div>
+<div id="tag">asset lab · realtime · every mesh and texture generated in code</div>
+<script type="module" src="./src/lab.js"></script>
+</body>
+</html>

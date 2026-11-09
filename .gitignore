@@ -1,0 +1,12 @@
+# licensed sound samples are not redistributed (see README)
+assets/*.wav
+# capture output
+capture/
+*.mp4
+node_modules/
+# horizon backdrop image is not redistributed (the sky falls back to the procedural one)
+assets/backdrop.webp
+# stills that show the backdrop
+shots/05-hauler-cam.jpg
+shots/06-hauler-cam-eaten.jpg
+shots/08-orbit-zoom.jpg

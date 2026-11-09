@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Worm Rider</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--ink:#efe6d8;--amber:#ffb35c;--dim:rgba(239,230,216,.62)}
+  html,body{margin:0;height:100%;background:#050505;overflow:hidden;color:var(--ink);font:12px/1.3 Bahnschrift,"DIN Alternate","Segoe UI",system-ui,sans-serif;user-select:none;cursor:default}
+  #stage{position:fixed;inset:0;display:grid;place-items:center}
+  canvas{display:block}
+  #frame{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;--bar:0%}
+  .bar{position:absolute;left:0;right:0;height:var(--bar);background:#000}
+  .bar.t{top:0}.bar.b{bottom:0}
+  .hud{position:absolute;letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 10px rgba(0,0,0,.55)}
+  #brand{left:3.2%;top:5.2%}
+  #brand b{display:block;font-size:clamp(13px,1.5vw,22px);font-weight:700;letter-spacing:.34em}
+  #brand i{display:block;font-style:normal;font-size:clamp(8px,.72vw,11px);color:var(--dim);margin-top:.5em;padding-top:.6em;border-top:1px solid rgba(239,230,216,.35)}
+  #score{right:3.2%;top:5.2%;display:flex;gap:2.4em;text-align:right}
+  #score div{font-size:clamp(8px,.72vw,11px);color:var(--dim)}
+  #score b{display:block;font-size:clamp(20px,2.7vw,40px);font-weight:300;letter-spacing:.08em;color:var(--ink);font-variant-numeric:tabular-nums}
+  #score .hot b{color:var(--amber)}
+  #help{left:3.2%;bottom:6%;font-size:clamp(8px,.72vw,11px);color:var(--dim)}
+  #help b{display:block;font-size:clamp(11px,1.05vw,15px);color:var(--ink);font-weight:600;margin-bottom:.7em}
+  #help kbd{font:inherit;color:var(--ink);border:1px solid rgba(239,230,216,.45);padding:.15em .55em;margin-right:.5em}
+  #help span{margin-right:1.6em;white-space:nowrap}
+  #auto{right:3.2%;bottom:6%;font-size:clamp(8px,.72vw,11px);color:var(--amber);opacity:0;transition:opacity .4s;text-align:right}
+  #auto.on{opacity:1}
+  #mute{position:absolute;right:3.2%;bottom:3.4%;font-size:clamp(7px,.62vw,10px);color:var(--dim);letter-spacing:.2em}
+  #perf{position:absolute;right:3.2%;top:13.5%;font-size:clamp(7px,.62vw,10px);color:var(--dim);letter-spacing:.2em;font-variant-numeric:tabular-nums}
+  #toast{left:50%;bottom:17%;transform:translate(-50%,12px);font-size:clamp(12px,1.35vw,20px);font-weight:600;letter-spacing:.3em;opacity:0;transition:opacity .25s,transform .25s;white-space:nowrap;padding:.5em 1.2em;border-top:1px solid var(--amber);border-bottom:1px solid var(--amber)}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  #frame.clean .hud{display:none}
+  .cover{position:fixed;inset:0;display:grid;place-items:center;text-align:center;transition:opacity .9s;z-index:5}
+  .cover.gone{opacity:0;pointer-events:none}
+  #loading{background:#050505;letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:var(--dim)}
+  #title{background:radial-gradient(ellipse at center,rgba(0,0,0,.05) 0%,rgba(0,0,0,.62) 100%);cursor:pointer}
+  #title h1{margin:0;font-size:clamp(38px,8.4vw,132px);font-weight:700;letter-spacing:.2em;text-indent:.2em;line-height:1;text-shadow:0 4px 40px rgba(0,0,0,.6)}
+  #title p{margin:1.4em 0 0;letter-spacing:.42em;text-transform:uppercase;font-size:clamp(9px,1vw,14px);color:var(--dim)}
+  #title .go{margin-top:3.2em;color:var(--amber);animation:pulse 1.6s ease-in-out infinite}
+  #title small{position:absolute;left:0;right:0;bottom:6%;letter-spacing:.3em;text-transform:uppercase;font-size:clamp(7px,.66vw,10px);color:var(--dim)}
+  @keyframes pulse{50%{opacity:.35}}
+  @media (prefers-reduced-motion:reduce){#title .go{animation:none}}
+</style>
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+<div id="stage"></div>
+<div id="frame">
+  <div class="bar t"></div><div class="bar b"></div>
+  <div class="hud" id="brand"><b>Worm Rider</b><i>Ring road · sector 04</i></div>
+  <div class="hud" id="score"><div class="hot">Devoured<b id="eaten">00</b></div><div>Escaped<b id="escaped">00</b></div></div>
+  <div class="hud" id="help"><b id="state">Surface</b><span><kbd>A</kbd><kbd>D</kbd>steer</span><span><kbd>Space</kbd>hold to dive · release to breach</span><span><kbd>Drag</kbd>look around</span><span><kbd>Wheel</kbd>zoom</span><span><kbd>P</kbd>autopilot</span><span><kbd>H</kbd>hide HUD</span></div>
+  <div class="hud" id="auto">Autopilot · press A, D or Space to take over</div>
+  <div class="hud" id="mute">M · sound on</div>
+  <div class="hud" id="perf"></div>
+  <div class="hud" id="toast"></div>
+</div>
+<div class="cover" id="title">
+  <div><h1>WORM RIDER</h1><p>Ride the worm · eat the convoy before it reaches the gate</p><p class="go">Click or press any key</p></div>
+  <small>Every mesh and texture in this scene is generated in code</small>
+</div>
+<div class="cover" id="loading"><div id="loadmsg">waking up</div></div>
+<script type="module" src="./src/game.js"></script>
+</body>
+</html>
