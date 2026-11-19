@@ -21,10 +21,10 @@ export async function run(seconds = 60) {
     x.drawImage(src, 0, 0, W, H);
     const bar = g.cam.cineW * g.cam.cineW * (3 - 2 * g.cam.cineW) * 0.09 * H; x.fillStyle = '#000'; x.fillRect(0, 0, W, bar); x.fillRect(0, H - bar, W, bar);
     x.shadowColor = 'rgba(0,0,0,.55)'; x.shadowBlur = 10; x.textBaseline = 'alphabetic';
-    text('WORM RIDER', 26, 62, 82, ink, 9, 700); x.fillStyle = 'rgba(239,230,216,.35)'; x.fillRect(62, 96, 238, 1); text('RING ROAD · SECTOR 04', 12, 62, 118, dim, 2.6, 500);
-    text('DEVOURED', 12, W - 196, 70, dim, 2.6, 500, 'right'); text($('eaten').textContent, 46, W - 196, 118, amber, 4, 300, 'right');
-    text('ESCAPED', 12, W - 62, 70, dim, 2.6, 500, 'right'); text($('escaped').textContent, 46, W - 62, 118, ink, 4, 300, 'right');
-    text($('state').textContent, 17, 62, H - 84, ink, 3.6, 600); text('A  D  STEER      SPACE  DIVE · BREACH      DRAG  LOOK      WHEEL  ZOOM', 12, 62, H - 58, dim, 2.6, 500);
+    text('웜 라이더', 26, 62, 82, ink, 9, 700); x.fillStyle = 'rgba(239,230,216,.35)'; x.fillRect(62, 96, 238, 1); text('RING ROAD · SECTOR 04', 12, 62, 118, dim, 2.6, 500);
+    text('포식', 12, W - 196, 70, dim, 2.6, 500, 'right'); text($('eaten').textContent, 46, W - 196, 118, amber, 4, 300, 'right');
+    text('탈출', 12, W - 62, 70, dim, 2.6, 500, 'right'); text($('escaped').textContent, 46, W - 62, 118, ink, 4, 300, 'right');
+    text($('state').textContent, 17, 62, H - 84, ink, 3.6, 600); text('A  D  조향      SPACE  잠수 · 돌출      드래그  둘러보기      휠  확대', 12, 62, H - 58, dim, 2.6, 500);
     toastA += (($('toast').classList.contains('on') ? 1 : 0) - toastA) * 0.2;
     if (toastA > 0.02) { x.globalAlpha = toastA; const s = $('toast').textContent; x.font = font(24, 600); x.letterSpacing = '7px'; const tw = x.measureText(s).width; x.fillStyle = amber; x.fillRect(W / 2 - tw / 2 - 26, H * 0.83 - 34, tw + 52, 1.5); x.fillRect(W / 2 - tw / 2 - 26, H * 0.83 + 16, tw + 52, 1.5); text(s, 24, W / 2, H * 0.83, ink, 7, 600, 'center'); x.globalAlpha = 1; }
     x.shadowBlur = 0;

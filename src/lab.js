@@ -35,16 +35,16 @@ const groundH = (x, z) => (fbm2(x * 0.012, z * 0.012, 3) - 0.5) * 3.0 * Math.min
 
 const ASSETS = {
   truck: {
-    label: 'Hauler', ext: 13, build: async () => buildTruck(T, { id: 7 }),
+    label: '운반차', ext: 13, build: async () => buildTruck(T, { id: 7 }),
     cams: [{ p: [0.6, 2.1, -24], t: [0.1, 1.85, 0], f: 24 }, { p: [16, 3.3, -11.5], t: [0.6, 1.7, 0], f: 24 }, { p: [9.6, 1.5, -5.4], t: [5.1, 1.5, -1.2], f: 34 },
       { p: [-13.5, 4.6, -9], t: [-2, 2, 0], f: 28 }, { p: [-1.5, 1.9, -6.2], t: [-1.2, 1.9, -1.6], f: 36 }],
   },
   rock: {
-    label: 'Rock', ext: 95, build: async () => (await import('./rock.js')).buildRockSet(T),
+    label: '바위', ext: 95, build: async () => (await import('./rock.js')).buildRockSet(T),
     cams: [{ p: [70, 9, -150], t: [0, 36, 0], f: 30 }, { p: [34, 4, -52], t: [4, 22, 0], f: 36 }, { p: [-90, 40, -110], t: [0, 30, 0], f: 30 }],
   },
   worm: {
-    label: 'Worm', ext: 95, build: async () => (await import('./worm.js')).buildWormLab(T),
+    label: '웜', ext: 95, build: async () => (await import('./worm.js')).buildWormLab(T),
     cams: [{ p: [116, 12, -78], t: [34, 19, 0], f: 30 }, { p: [88, 21, -24], t: [58, 21, 0], f: 34 }, { p: [70, 30, -44], t: [30, 22, 0], f: 30 }, { p: [-30, 30, -120], t: [6, 14, 0], f: 30 }, { p: [8, 41, -5], t: [44, 29, 0.5], f: 38 }, { p: [24, 33, -30], t: [20, 22, -8], f: 26 }],
   },
 };
@@ -67,7 +67,7 @@ async function show(name, cam = 0) {
 
 for (const k in ASSETS) { const b = document.createElement('button'); b.textContent = ASSETS[k].label; b.dataset.a = k; b.onclick = () => show(k, 0); ui.appendChild(b); }
 { const s = document.createElement('span'); s.className = 'sep'; ui.appendChild(s);
-  const b = document.createElement('button'); b.textContent = 'Next view'; b.onclick = () => show(current, camIdx + 1); ui.appendChild(b); }
+  const b = document.createElement('button'); b.textContent = '다음 시점'; b.onclick = () => show(current, camIdx + 1); ui.appendChild(b); }
 addEventListener('keydown', (e) => { const n = Object.keys(ASSETS)[+e.key - 1]; if (n) show(n, 0); if (e.key === ' ') show(current, camIdx + 1); });
 
 function resize() {

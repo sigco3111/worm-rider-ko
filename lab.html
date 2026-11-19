@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Worm Rider — asset lab</title>
+<title>웜 라이더 — 에셋 실험실</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-  html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;font:12px/1.2 Bahnschrift,"Segoe UI",system-ui,sans-serif;color:#e9e2d8}
+  @font-face{font-family:"Noto Sans KR";src:url("./assets/fonts/NotoSansKR-subset.woff2") format("woff2");font-weight:100 900;font-display:swap}
+  html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;font:12px/1.2 Bahnschrift,"Segoe UI","Noto Sans KR",system-ui,sans-serif;color:#e9e2d8}
   #stage{position:fixed;inset:0;display:grid;place-items:center}
   canvas{display:block}
   #ui{position:fixed;left:16px;top:14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:calc(100% - 32px)}
@@ -25,7 +26,7 @@
 <body>
 <div id="stage"></div>
 <div id="ui"></div>
-<div id="tag">asset lab · realtime · every mesh and texture generated in code</div>
+<div id="tag">에셋 실험실 · 실시간 · 모든 메시와 텍스처는 코드로 생성됩니다</div>
 <script type="module" src="./src/lab.js"></script>
 </body>
 </html>

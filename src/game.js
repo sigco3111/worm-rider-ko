@@ -26,17 +26,17 @@ const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(55, 16 / 9
 scene.fog = new THREE.FogExp2(new THREE.Color(0.84, 0.71, 0.52), 0.0005);
 setSun(-125, 26);
 
-await stage('baking textures');
+await stage('텍스처 굽는 중');
 const T = makeTextures(renderer); T.renderer = renderer;
 let backdrop = null;
 try { backdrop = await new THREE.TextureLoader().loadAsync('./assets/backdrop.webp'); backdrop.colorSpace = THREE.SRGBColorSpace; backdrop.wrapS = backdrop.wrapT = THREE.ClampToEdgeWrapping; backdrop.anisotropy = 8; } catch (e) { console.warn('backdrop missing', e); }
 const env = makeEnv(renderer, scene, { backdrop, shadowSize: 3072 }); env.sun.shadow.normalBias = 0.16; env.sun.shadow.bias = -0.0004; env.sun.shadow.radius = 2;
-await stage('raising the canyon');
+await stage('협곡 쌓아 올리는 중');
 const world = buildWorld(T); scene.add(world.group);
-await stage('growing the worm');
+await stage('웜 깨우는 중');
 const rig = buildWormRig(T, 150); scene.add(rig.group);
 const a0 = -48 * Math.PI / 180, sim = new WormSim(Math.cos(a0) * (RR + 80), Math.sin(a0) * (RR + 80), Math.atan2(Math.sin(a0), -Math.cos(a0)), 150);
-await stage('fuelling the convoy');
+await stage('운반대 준비 중');
 const convoy = new Convoy(T, 6); scene.add(convoy.group);
 const dust = new Particles(7000, T, scene.fog), sparks = new Particles(1400, T, scene.fog, true), debris = new Debris(T), furrow = new Furrow(T);
 scene.add(dust.points, sparks.points, debris.group, furrow.mesh);
@@ -64,7 +64,7 @@ addEventListener('keydown', (e) => {
   if (e.repeat) return; begin(); keys.add(e.code);
   if (['KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) { manual(); e.preventDefault(); }
   if (e.code === 'KeyP') { auto = !auto; $('auto').classList.toggle('on', auto); }
-  if (e.code === 'KeyM') $('mute').textContent = sound.toggle() ? 'M · SOUND OFF' : 'M · SOUND ON';
+  if (e.code === 'KeyM') $('mute').textContent = sound.toggle() ? 'M · 소리 꺼짐' : 'M · 소리 켜짐';
   if (e.code === 'KeyC') triggerWide(2.8, 110);
   if (e.code === 'KeyH') $('frame').classList.toggle('clean');
   if (e.code === 'KeyV') { orbit.yaw = orbit.pitch = 0; orbit.zoom = 1; }
@@ -127,7 +127,7 @@ function eat(k, crushed) {
   for (let i = 0; i < 110; i++) { const a = rand(0, 6.283), sp = rand(4, 26); puff(cc.x + rand(-5, 5), cc.y + rand(-1, 4), cc.z + rand(-5, 5), Math.cos(a) * sp + k.vel.x * 0.4, rand(4, 26), Math.sin(a) * sp + k.vel.z * 0.4, rand(1.6, 3.6), rand(4, 8), rand(16, 30), rand(0.22, 0.36), rand(0.5, 1.05), 8, 0.7); }
   for (let i = 0; i < 130; i++) { const a = rand(0, 6.283), sp = rand(10, 60), h = rand(1.2, 3.6); sparks.spawn(cc.x, cc.y, cc.z, Math.cos(a) * sp, rand(6, 48), Math.sin(a) * sp, rand(0.35, 1.1), rand(1.2, 2.6), 0.3, 1, 2.2 * h, 0.9 * h, 0.25 * h, 34, 0.4); }
   sound.crunch(); stopT = 0.09; slowT = 1.1; cam.shake = Math.max(cam.shake, 1.2); jawSnap = 0.4;
-  $('toast').textContent = `HAULER ${String(k.g.userData.id).padStart(2, '0')} ${crushed ? 'CRUSHED' : 'DEVOURED'}`; $('toast').classList.add('on'); toastT = 2.2;
+  $('toast').textContent = `운반차 ${String(k.g.userData.id).padStart(2, '0')} · ${crushed ? '파괴' : '포식'}`; $('toast').classList.add('on'); toastT = 2.2;
   if (cam.mode === 'truck' && cam.truck === k) { cam.frozen = true; cam.cineT = 1.5; }
   else if (!cam.mode && cam.cool <= 0 && mode !== 'truck') triggerWide(2.4, 78);
 }
@@ -292,7 +292,7 @@ function step(rdt) {
   sound.update(spd, surf ? 1 : sim.state === 'air' ? 0.15 : 0.3, clamp(-sim.d / (WR * 1.8)));
   toastT -= rdt; if (toastT < 0) $('toast').classList.remove('on');
   $('eaten').textContent = String(convoy.eaten).padStart(2, '0'); $('escaped').textContent = String(convoy.escaped).padStart(2, '0');
-  $('state').textContent = sim.state === 'dive' ? 'SUBMERGED' : sim.state === 'air' ? 'BREACH' : 'SURFACE';
+  $('state').textContent = sim.state === 'dive' ? '잠수 중' : sim.state === 'air' ? '돌출' : '지상';
   post.grade.uniforms.uTime.value = time; post.composer.render(rdt);
 }
 let last = performance.now(), lastFrame = 0, frames = 0, acc = 0, slowAcc = 0, slowN = 0; window.__fps = 0;
